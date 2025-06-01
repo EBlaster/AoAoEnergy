@@ -22,7 +22,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <!--<ProjectReference Include="..\Penumbra.Api\Penumbra.Api.csproj" />-->
 	  <ProjectReference Include="..\Penumbra.String\Penumbra.String.csproj" />
 	</ItemGroup>
 
@@ -34,14 +33,6 @@
 		<Reference Include="FFXIVClientStructs">
 			<Private>false</Private>
 			<HintPath>C:\Users\liyaz\AppData\Roaming\XIVLauncher\addon\Hooks\dev\FFXIVClientStructs.dll</HintPath>
-		</Reference>
-		<Reference Include="Lumina">
-			<Private>false</Private>
-			<HintPath>C:\Users\liyaz\AppData\Roaming\XIVLauncher\addon\Hooks\dev\Lumina.dll</HintPath>
-		</Reference>
-		<Reference Include="Lumina.Excel">
-			<Private>false</Private>
-			<HintPath>C:\Users\liyaz\AppData\Roaming\XIVLauncher\addon\Hooks\dev\Lumina.Excel.dll</HintPath>
 		</Reference>
 		<Reference Include="InteropGenerator.Runtime">
 			<Private>false</Private>

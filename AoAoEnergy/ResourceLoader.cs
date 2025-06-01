@@ -1,20 +1,11 @@
 ﻿using Dalamud.Hooking;
 using Dalamud.Utility.Signatures;
-using FFXIVClientStructs.FFXIV.Client.Game.Character;
 using FFXIVClientStructs.FFXIV.Client.System.Resource;
 using Penumbra.String.Classes;
 using Penumbra.String;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Metadata;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading.Tasks;
 using CsHandle = FFXIVClientStructs.FFXIV.Client.System.Resource.Handle;
-using FFXIVClientStructs.FFXIV.Client.System.File;
-using Dalamud.Game;
-using FFXIVClientStructs.FFXIV.Client.Game.Object;
 
 namespace AoAoEnergy
 {
@@ -68,7 +59,6 @@ namespace AoAoEnergy
 
             [FieldOffset(0xAC)]
             public uint RefCount;
-
 
             // Only use these if you know what you are doing.
             // Those are actually only sure to be accessible for DefaultResourceHandles.
@@ -127,20 +117,17 @@ namespace AoAoEnergy
             if (replacedPath == null || replacedPath.Length >= 260)
             {
                 var unreplaced = GetResourceAsyncHook.Original(resourceManager, categoryId, resourceType, resourceHash, path, resParams, isUnknown);
-                //Plugin.PluginLog.Debug($"[GetResourceHandler] ORIGINAL: {gamePathString} -> " + new IntPtr(unreplaced).ToString("X8"));
                 return unreplaced;
             }
 
             var resolvedPath = new FullPath(replacedPath);
-            //PathResolved?.Invoke(*resourceType, resolvedPath);
 
             *resourceHash = ComputeHash(resolvedPath.InternalName, resParams);
             path = resolvedPath.InternalName.Path;
 
             var replaced = GetResourceAsyncHook.Original(resourceManager, categoryId, resourceType, resourceHash, path, resParams, isUnknown);
-            //Plugin.PluginLog.Debug($"[GetResourceHandler] REPLACED: {gamePathString} -> {replacedPath} -> " + new IntPtr(replaced).ToString("X8"));
-            return replaced;
 
+            return replaced;
         }
 
         public static int ComputeHash(CiByteString path, GetResourceParameters* resParams)
@@ -232,7 +219,7 @@ namespace AoAoEnergy
         private Dictionary<string, string> RepalcePaths =new Dictionary<string, string>();
         public void AddReplace(string gameFsPath,string replacePath)
         {
-            this.RepalcePaths.Add(gameFsPath, replacePath);
+            RepalcePaths.Add(gameFsPath, replacePath);
             Plugin.PluginLog.Info($"Add Repalce: {gameFsPath} -> {replacePath}");
         }
         private bool GetReplacePath(string gameFsPath, out string localPath)
@@ -269,12 +256,12 @@ namespace AoAoEnergy
         {
             Plugin.GameInteropProvider.InitializeFromAttributes(this);
             ReadFile = Marshal.GetDelegateForFunctionPointer<ReadFileDelegate>(Plugin.SigScanner.ScanText("48 89 5C 24 ?? 48 89 6C 24 ?? 48 89 74 24 ?? 57 41 54 41 55 41 56 41 57 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 48 63 42"));
-            this.GetResourceAsyncHook?.Enable();
-            this.ReadSqpackHook?.Enable();
+            GetResourceAsyncHook?.Enable();
+            ReadSqpackHook?.Enable();
         }
         public void Dispose() {
-            this.GetResourceAsyncHook?.Dispose();
-            this.ReadSqpackHook?.Dispose();
+            GetResourceAsyncHook?.Dispose();
+            ReadSqpackHook?.Dispose();
         }
     }
 }

@@ -1,68 +1,39 @@
-﻿using Dalamud.Data;
-using Dalamud.Game;
-using Dalamud.Game.ClientState;
-using Dalamud.Game.Command;
-using Dalamud.Game.Gui;
+﻿using Dalamud.Game;
 using Dalamud.Hooking;
 using Dalamud.IoC;
 using Dalamud.Plugin;
 using Dalamud.Plugin.Services;
 using Dalamud.Utility.Signatures;
-using FFXIVClientStructs;
-using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.Game.Character;
-using System.Runtime.InteropServices;
-using Lumina;
-using Lumina.Excel.GeneratedSheets;
-using FFXIVClientStructs.FFXIV.Client.Game.Fate;
 using FFXIVClientStructs.FFXIV.Client.Game.Object;
-//using Penumbra.Api.IpcSubscribers.Legacy;
-//using Penumbra.Api.Enums;
-using System.Diagnostics;
-using System.Reflection;
+using System.Runtime.InteropServices;
 
 namespace AoAoEnergy
 {
-
     public unsafe class Plugin : IDalamudPlugin
     {
-        public string Name => "AoAoEnergy";
+        public static string Name => "AoAoEnergy";
 
         [PluginService]
-        internal static IDalamudPluginInterface PluginInterface { get; set; }
+        internal static IDalamudPluginInterface? PluginInterface { get; set; }
         [PluginService]
-        internal static ISigScanner Scanner { get; set; }
+        internal static ISigScanner? Scanner { get; set; }
         [PluginService]
-        internal static ICommandManager CommandManager { get; set; }
+        internal static ICommandManager? CommandManager { get; set; }
         [PluginService]
-        internal static IClientState ClientState { get; set; }
+        internal static IClientState? ClientState { get; set; }
         [PluginService]
-        internal static IChatGui ChatGui { get; set; }
+        internal static IChatGui? ChatGui { get; set; }
         [PluginService]
-        internal static IDataManager DataManager { get; set; }
+        internal static IDataManager? DataManager { get; set; }
         [PluginService]
-        internal static IGameInteropProvider GameInteropProvider { get; set; }
+        internal static IGameInteropProvider? GameInteropProvider { get; set; }
         [PluginService]
-        internal static IFramework Framework { get; set; }
+        internal static IFramework? Framework { get; set; }
         [PluginService]
-        internal static IPluginLog PluginLog { get; set; }
+        internal static IPluginLog? PluginLog { get; set; }
         [PluginService]
-        internal static ISigScanner SigScanner { get; set; }
-        //private delegate IntPtr GetStatusDataDelegate(uint index);
-        //[Signature("E8 ?? ?? ?? ?? 0F B7 37", DetourName = nameof(GetStatusDataDetour))]
-        //private Hook<GetStatusDataDelegate> GetActionDataHook;
-        //private static object GetStatusDataDetour()
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //private delegate IntPtr GetStatusHitEffectDataDelegate(uint index);
-        //[Signature("E8 ?? ?? ?? ?? 48 85 C0 74 5D 48 8B 1F ", DetourName = nameof(GetStatusHitEffectDataDetour))]
-        //private Hook<GetStatusHitEffectDataDelegate> GetStatusHitEffectDataHook;
-        //private static object GetStatusHitEffectDataDetour()
-        //{
-        //    throw new NotImplementedException();
-        //}
+        internal static ISigScanner? SigScanner { get; set; }
 
         [StructLayout(LayoutKind.Explicit, Size = 0x8)]
         struct ActionResult
@@ -81,12 +52,6 @@ namespace AoAoEnergy
         private Hook<CreateResultVfxDelegate> CreateResultVfxHook;
         private void CreateResultVfxDetour(IntPtr a, Character* cast, Character* target, uint action, ActionResult* result)
         {
-#if DEBUG
-            // May crash game
-            //var status = DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.Status>();
-            //PluginLog.Debug($"{cast->NameString} {target->NameString} {result->Type} {result->Value}");
-#endif
-            //PluginLog.Debug($"{cast->NameString} {target->NameString} {result->Type} {result->Value} {IsShowInCarema(cast)}");
             if (result->Type == 14 && result->Value == 49)
             {
                 if (((nint)cast != 0 || IsShowInCarema(cast))
@@ -106,58 +71,22 @@ namespace AoAoEnergy
         private delegate bool IsShowInCaremaDelegate(Character* chara);
         private IsShowInCaremaDelegate IsShowInCarema;
 
-        //private PenumbraService PenumbraService;
         private ResourceLoader ResourceLoader;
 
         public Plugin()
         {
-            //InitMod();
-            GameInteropProvider.InitializeFromAttributes(this);
+            GameInteropProvider?.InitializeFromAttributes(this);
             ResourceLoader = new ResourceLoader();
-            ResourceLoader.AddReplace(AoAoVfxPath, Path.Combine(PluginInterface.AssemblyLocation.Directory!.FullName, "ev_energydrink_01x_30s.avfx"));
-            this.CreateVfx = Marshal.GetDelegateForFunctionPointer<CreateVfxDelegate>(SigScanner.ScanText("E8 ?? ?? ?? ?? 48 8B D8 48 85 C0 74 27 B2 01"));
-            this.IsShowInCarema = Marshal.GetDelegateForFunctionPointer<IsShowInCaremaDelegate>(SigScanner.ScanText("40 53 48 83 EC 20 48 8B 01 48 8B D9 FF 50 ?? 83 F8 08 75 ?? 0F B7 83"));
-            CreateResultVfxHook?.Enable();
-        }
-
-        public void InitMod()
-        {
-            //Task.Run(() =>
-            //{
-            //    Thread.Sleep(1000);
-            //    PenumbraService = new PenumbraService(PluginInterface);
-            //    Thread.Sleep(500);
-            //    var collection = PenumbraService._currentCollection!.Invoke(ApiCollectionType.Current);
-            //    var (ec, modState) = PenumbraService._getCurrentSettings!.Invoke(collection!.Value.Id, this.Name);
-            //    if (ec == PenumbraApiEc.ModMissing)
-            //    {
-            //        PluginLog.Info($"Installing AoAoEnergy mod");
-            //        var modPath = Path.Combine(PluginInterface.AssemblyLocation.Directory!.FullName, "AoAoEnergy.pmp");
-            //        PluginLog.Debug($"{modPath}");
-            //        ec = PenumbraService._installMod!.Invoke(modPath);
-            //        if (ec is not PenumbraApiEc.Success)
-            //            PluginLog.Error("Fail to install mod.");
-            //    }
-            //    Thread.Sleep(1000);
-            //    (ec, modState) = PenumbraService._getCurrentSettings!.Invoke(collection!.Value.Id, this.Name);
-            //    if (modState!.Value.Item1 == false)
-            //    {
-            //        PluginLog.Info($"Enabling AoAoEnergy mod");
-            //        PluginLog.Debug($"{collection!.Value.Name}");
-            //        var modDir = PenumbraService._getModDir!.Invoke();
-            //        ec = PenumbraService._setMod!.Invoke(collection.Value.Id, modDir, true, modName: this.Name);
-            //        if (ec is not PenumbraApiEc.Success)
-            //            PluginLog.Error("Fail to enable mod.");
-            //    };
-            //});
+            ResourceLoader.AddReplace(AoAoVfxPath, Path.Combine(PluginInterface!.AssemblyLocation.Directory!.FullName, "ev_energydrink_01x_30s.avfx"));
+            CreateVfx = Marshal.GetDelegateForFunctionPointer<CreateVfxDelegate>(SigScanner!.ScanText("E8 ?? ?? ?? ?? 48 8B D8 48 85 C0 74 27 B2 01"));
+            IsShowInCarema = Marshal.GetDelegateForFunctionPointer<IsShowInCaremaDelegate>(SigScanner.ScanText("40 53 48 83 EC 20 48 8B 01 48 8B D9 FF 50 ?? 83 F8 08 75 ?? 0F B7 83"));
+            CreateResultVfxHook!.Enable();
         }
 
         public void Dispose()
         {
-            //throw new NotImplementedException();
             CreateResultVfxHook?.Dispose();
             ResourceLoader?.Dispose();
-            //PenumbraService?.Dispose();
         }
     }
 }

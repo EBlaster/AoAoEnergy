@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net8.0-windows</TargetFramework>
+		<TargetFramework>net9.0-windows</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
@@ -29,19 +29,23 @@
 	<ItemGroup>
 		<Reference Include="Dalamud">
 			<Private>false</Private>
-			<HintPath>..\..\..\Games\FFXIV_Utils\XIVLauncherCN\Roaming\addon\Hooks\dev\Dalamud.dll</HintPath>
+			<HintPath>C:\Users\liyaz\AppData\Roaming\XIVLauncher\addon\Hooks\dev\Dalamud.dll</HintPath>
 		</Reference>
 		<Reference Include="FFXIVClientStructs">
 			<Private>false</Private>
-			<HintPath>..\..\..\Games\FFXIV_Utils\XIVLauncherCN\Roaming\addon\Hooks\dev\FFXIVClientStructs.dll</HintPath>
+			<HintPath>C:\Users\liyaz\AppData\Roaming\XIVLauncher\addon\Hooks\dev\FFXIVClientStructs.dll</HintPath>
 		</Reference>
 		<Reference Include="Lumina">
 			<Private>false</Private>
-			<HintPath>..\..\..\Games\FFXIV_Utils\XIVLauncherCN\Roaming\addon\Hooks\dev\Lumina.dll</HintPath>
+			<HintPath>C:\Users\liyaz\AppData\Roaming\XIVLauncher\addon\Hooks\dev\Lumina.dll</HintPath>
 		</Reference>
 		<Reference Include="Lumina.Excel">
 			<Private>false</Private>
-			<HintPath>..\..\..\Games\FFXIV_Utils\XIVLauncherCN\Roaming\addon\Hooks\dev\Lumina.Excel.dll</HintPath>
+			<HintPath>C:\Users\liyaz\AppData\Roaming\XIVLauncher\addon\Hooks\dev\Lumina.Excel.dll</HintPath>
+		</Reference>
+		<Reference Include="InteropGenerator.Runtime">
+			<Private>false</Private>
+			<HintPath>C:\Users\liyaz\AppData\Roaming\XIVLauncher\addon\Hooks\dev\InteropGenerator.Runtime.dll</HintPath>
 		</Reference>
 	</ItemGroup>
 

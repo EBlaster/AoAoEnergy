@@ -28,15 +28,15 @@
 	<ItemGroup>
 		<Reference Include="Dalamud">
 			<Private>false</Private>
-			<HintPath>C:\Users\liyaz\AppData\Roaming\XIVLauncher\addon\Hooks\dev\Dalamud.dll</HintPath>
+			<HintPath>$(APPDATA)\XIVLauncher\addon\Hooks\dev\Dalamud.dll</HintPath>
 		</Reference>
 		<Reference Include="FFXIVClientStructs">
 			<Private>false</Private>
-			<HintPath>C:\Users\liyaz\AppData\Roaming\XIVLauncher\addon\Hooks\dev\FFXIVClientStructs.dll</HintPath>
+			<HintPath>$(APPDATA)\XIVLauncher\addon\Hooks\dev\FFXIVClientStructs.dll</HintPath>
 		</Reference>
 		<Reference Include="InteropGenerator.Runtime">
 			<Private>false</Private>
-			<HintPath>C:\Users\liyaz\AppData\Roaming\XIVLauncher\addon\Hooks\dev\InteropGenerator.Runtime.dll</HintPath>
+			<HintPath>$(APPDATA)\XIVLauncher\addon\Hooks\dev\InteropGenerator.Runtime.dll</HintPath>
 		</Reference>
 	</ItemGroup>
 
